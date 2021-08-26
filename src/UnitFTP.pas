@@ -91,6 +91,9 @@ begin
 end;
 
 function TPortalFTP.Execute: iFTP;
+var
+  Pastas: TArray<string>;
+  i: Integer;
 begin
   IdFTP.Disconnect();
   IdFTP.Host     := FHost;
@@ -112,24 +115,27 @@ begin
       OnOuvirLog('Conectado com sucesso!');
     end;
     try
-      IdFTP.ChangeDir(FPastaDestino);
-      if not FTPArquivoExiste(IdFTP, FPastaDestino) then
+      Pastas := FPastaDestino.Split(['/']);
+      for i := Low(Pastas) to High(Pastas) do
       begin
-        if Assigned(OnOuvirLog) then
+        if not FTPArquivoExiste(IdFTP, Pastas[i]) then
         begin
-          OnOuvirLog('');
-          OnOuvirLog('Criando o Diretório ' + FPastaDestino + '...');
+          if Assigned(OnOuvirLog) then
+          begin
+            OnOuvirLog('');
+            OnOuvirLog('Criando o Diretório ' + Pastas[i] + '...');
+          end;
+          try
+            IdFTP.MakeDir(Pastas[i]);
+          except
+          end;
+          if Assigned(OnOuvirLog) then
+          begin
+            OnOuvirLog('Diretório criado com sucesso!');
+          end;
         end;
-        try
-          IdFTP.MakeDir(FPastaDestino);
-        except
-        end;
-        if Assigned(OnOuvirLog) then
-        begin
-          OnOuvirLog('Diretório criado com sucesso!');
-        end;
+        IdFTP.ChangeDir(Pastas[i]);
       end;
-      IdFTP.ChangeDir(FPastaDestino);
       TamanhoArquivo := TamanhoDoArquivo(FArqOrigem);
       if Assigned(OnOuvirLog) then
       begin
