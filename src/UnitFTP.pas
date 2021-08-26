@@ -22,7 +22,7 @@ type
     function SetOnMostrarLog(Value: TOnMostrarLog): iFTP;
   end;
 
-  TFTP = class(TInterfacedObject, iFTP)
+  TPortalFTP = class(TInterfacedObject, iFTP)
   private
     FHost: string;
     FPort: integer;
@@ -74,7 +74,7 @@ uses
 
 { TFTP }
 
-constructor TFTP.Create;
+constructor TPortalFTP.Create;
 begin
   IdFTP             := TIdFTP.Create(nil);
   IdFTP.OnWork      := OnIdFTPWork;
@@ -84,13 +84,13 @@ begin
   FModoPassivo      := True;
 end;
 
-destructor TFTP.Destroy;
+destructor TPortalFTP.Destroy;
 begin
   IdFTP.DisposeOf;
   inherited;
 end;
 
-function TFTP.Execute: iFTP;
+function TPortalFTP.Execute: iFTP;
 begin
   IdFTP.Disconnect();
   IdFTP.Host     := FHost;
@@ -112,7 +112,7 @@ begin
       OnOuvirLog('Conectado com sucesso!');
     end;
     try
-      IdFTP.ChangeDir('Backups_Clientes');
+      IdFTP.ChangeDir(FPastaDestino);
       if not FTPArquivoExiste(IdFTP, FPastaDestino) then
       begin
         if Assigned(OnOuvirLog) then
@@ -161,7 +161,7 @@ begin
     IdFTP.Disconnect;
 end;
 
-function TFTP.FTPArquivoExiste(CompFTP: TIdFTP; ArquivoOuDiretorio: string): Boolean;
+function TPortalFTP.FTPArquivoExiste(CompFTP: TIdFTP; ArquivoOuDiretorio: string): Boolean;
 begin
   try
     CompFTP.List(nil, ArquivoOuDiretorio, False);
@@ -171,7 +171,7 @@ begin
   end;
 end;
 
-procedure TFTP.OnIdFTPWork(Sender: TObject; AWorkMode: TWorkMode; AWorkCount: Int64);
+procedure TPortalFTP.OnIdFTPWork(Sender: TObject; AWorkMode: TWorkMode; AWorkCount: Int64);
 begin
   if (AWorkCount = 0) or (TamanhoArquivo = 0) then
     Exit;
@@ -206,7 +206,7 @@ begin
   HoraParcial       := Time;
 end;
 
-procedure TFTP.OnIdFTPWorkBegin(Sender: TObject; AWorkMode: TWorkMode; AWorkCountMax: Int64);
+procedure TPortalFTP.OnIdFTPWorkBegin(Sender: TObject; AWorkMode: TWorkMode; AWorkCountMax: Int64);
 begin
   HoraInicio        := Now;
   HoraParcial       := Time;
@@ -214,7 +214,7 @@ begin
   DownloadCompleto  := False;
 end;
 
-procedure TFTP.OnIdFTPWorkEnd(Sender: TObject; AWorkMode: TWorkMode);
+procedure TPortalFTP.OnIdFTPWorkEnd(Sender: TObject; AWorkMode: TWorkMode);
 var
   MinutosTranscorridos, SegundosTranscorridos: Int64;
 begin
@@ -241,72 +241,72 @@ begin
     FProgressBar.Visible := False;
 end;
 
-class function TFTP.New: iFTP;
+class function TPortalFTP.New: iFTP;
 begin
   Result := Self.Create;
 end;
 
-function TFTP.SetOnMostrarLog(Value: TOnMostrarLog): iFTP;
+function TPortalFTP.SetOnMostrarLog(Value: TOnMostrarLog): iFTP;
 begin
   Result     := Self;
   OnOuvirLog := Value;
 end;
 
-function TFTP.SetArqDestino(Value: string): iFTP;
+function TPortalFTP.SetArqDestino(Value: string): iFTP;
 begin
   Result      := Self;
   FArqDestino := Value;
 end;
 
-function TFTP.SetArqOrigem(Value: string): iFTP;
+function TPortalFTP.SetArqOrigem(Value: string): iFTP;
 begin
   Result     := Self;
   FArqOrigem := Value;
 end;
 
-function TFTP.SetHost(Value: string): iFTP;
+function TPortalFTP.SetHost(Value: string): iFTP;
 begin
   Result := Self;
   FHost  := Value;
 end;
 
-function TFTP.SetModoPassivo(Value: Boolean): iFTP;
+function TPortalFTP.SetModoPassivo(Value: Boolean): iFTP;
 begin
   Result       := Self;
   FModoPassivo := Value;
 end;
 
-function TFTP.SetPassword(Value: string): iFTP;
+function TPortalFTP.SetPassword(Value: string): iFTP;
 begin
   Result    := Self;
   FPassword := Value;
 end;
 
-function TFTP.SetPastaDestino(Value: string): iFTP;
+function TPortalFTP.SetPastaDestino(Value: string): iFTP;
 begin
   Result        := Self;
   FPastaDestino := Value;
 end;
 
-function TFTP.SetPort(Value: integer): iFTP;
+function TPortalFTP.SetPort(Value: integer): iFTP;
 begin
   Result := Self;
   FPort  := Value;
 end;
 
-function TFTP.SetProgressBar(Value: TProgressBar): iFTP;
+function TPortalFTP.SetProgressBar(Value: TProgressBar): iFTP;
 begin
   Result       := Self;
   FProgressBar := Value;
 end;
 
-function TFTP.SetUserName(Value: string): iFTP;
+function TPortalFTP.SetUserName(Value: string): iFTP;
 begin
   Result    := Self;
   FUserName := Value;
 end;
 
-function TFTP.TamanhoDoArquivo(Arquivo: string): integer;
+function TPortalFTP.TamanhoDoArquivo(Arquivo: string): integer;
 var
   FileStream: TFileStream;
 begin
