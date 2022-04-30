@@ -100,7 +100,7 @@ begin
   IdFTP.Port     := FPort;
   IdFTP.Username := FUserName;
   IdFTP.Password := FPassword;
-  IdFTP.Passive  := True; { usa modo passivo }
+  IdFTP.Passive  := FModoPassivo; { usa modo passivo }
   // IdFTPBackup.RecvBufferSize := 8192;
   try
     if Assigned(OnOuvirLog) then
