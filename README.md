@@ -3,6 +3,8 @@
 ## USAGE
 
 ```delphi
+uses
+  UnitFTP;
 
 var
   FTPTeste: iFTP;
