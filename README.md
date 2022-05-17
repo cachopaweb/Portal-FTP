@@ -7,7 +7,7 @@ uses
   UnitFTP;
 
 var
-  FTPTeste: iFTP;
+  FTPTest: iFTP;
 begin
   try
     FTPTest := TPortalFTP.New;
