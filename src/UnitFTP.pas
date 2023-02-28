@@ -29,7 +29,7 @@ type
 		function AcessaDiretorio(Caminho: string): iFTP;
 		function RetornaListaArquivos(Extensao: string; var Retorno: TList<TIdFTPListItem>): iFTP;
 		function BaixaArquivo(ArquivoOrigem, ArquivoDestino: string; Sobrescrever: boolean): iFTP;
-		function GetListaArquivos: TList<string>;
+		function GetListaArquivos: TList<TIdFTPListItem>;
   end;
 
   TPortalFTP = class(TInterfacedObject, iFTP)
@@ -74,7 +74,7 @@ type
     function AcessaDiretorio(Caminho: string): iFTP;
     function RetornaListaArquivos(Extensao: string; var Retorno: TList<TIdFTPListItem>): iFTP;
 		function BaixaArquivo(ArquivoOrigem, ArquivoDestino: string; Sobrescrever: boolean): iFTP;
-		function GetListaArquivos: TList<string>;
+		function GetListaArquivos: TList<TIdFTPListItem>;
   end;
 
 var
@@ -252,15 +252,11 @@ begin
   end;
 end;
 
-function TPortalFTP.GetListaArquivos: TList<string>;
+function TPortalFTP.GetListaArquivos: TList<TIdFTPListItem>;
 var
 	Arq: TIdFTPListItem;
 begin
-	Result := TList<String>.Create;
-	for Arq in FListaArquivos do
-	begin
-	  Result.Add(Arq.FileName);	
-	end;
+	Result := FListaArquivos;
 end;
 
 function TPortalFTP.ListaArquivos: iFTP;
